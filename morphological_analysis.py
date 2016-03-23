@@ -70,16 +70,12 @@ class Narou():
     # Insert analysis data into the database
     def insert_database(self, dataset, tokens, term):
 
-        # print dataset['title']
-        # a = raw_input()
         # Title
         table, column, value = 'cms_title', 'name', dataset['title']
         if not self.DB.sql_confirm(table, column, value):
             data_array = [value]
             self.DB.sql_insert(table, data_array)
         title_id = self.DB.get_record_id(table, column, value)
-        # print title_id
-        # print "title"
 
         # Term
         table, column, value = 'cms_term', 'type', term
@@ -87,24 +83,11 @@ class Narou():
             data_array = [value]
             self.DB.sql_insert(table, data_array)
         term_id = self.DB.get_record_id(table, column, value)
-        # print "term"
 
         # Score
         table = 'cms_score'
-        # print dataset['rank']
-        # print dataset['point']
         data_array = [dataset['rank'], dataset['point'][:-2].replace(',',''), self.date, term_id, title_id]
-        # print data_array
-        # data_array = [dataset['rank'], dataset['point'][:-2].replace(',',''), self.date, 1, term_id]
-        # print data_array
-        # print data_array
-        # a = '1,000pt'
-        # print int(a[:-2].replace(',',''))
-        # print '","'.join([str(i) for i in data_array])
-        # print data_array[3]
         self.DB.sql_insert(table, data_array)
-        # print 111
-        # print "score"
 
         for row in tokens:
             # Part of Speech
@@ -116,21 +99,8 @@ class Narou():
 
             # Letter
             table = 'cms_letter'
-            # a = str(value)
             data_array = [row.surface, self.date, pos_id, term_id]
-            # data_array = ["aaa", self.date, pos_id, term_id]
-            # data_array = [value]
             self.DB.sql_insert(table, data_array)
-
-        # for row in tokens:
-            # ubuntu用
-            # surface = unicode(row.surface.encode('utf-8'), 'utf-8')
-            # pos = unicode(row.part_of_speech.split(',')[0].encode('utf-8'), 'utf-8')
-            # print row.surface
-            # print row.part_of_speech
-            # print pos
-            # sql_confirm(cursor, 'PoS', 'value', pos)
-            # 確認
 
 # main
 if __name__ == '__main__':
