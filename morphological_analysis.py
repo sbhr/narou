@@ -45,6 +45,8 @@ class Narou():
 
         # Start Analysis
         self.logger.info('Analysis start.')
+        logstr = 'Collection date:%s' % (self.date)
+        self.logger.info(logstr)
         for row in self.json_data:
             cnt = 0
             print row['name']
