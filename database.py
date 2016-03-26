@@ -27,39 +27,46 @@ class Database():
     # Confirm with existing data
     def sql_confirm(self, table, column, value):
 
-        sql = u'select id from %s where %s = "%s"' % (table, column, value)
-        self.cursor.execute(sql)
-        result = self.cursor.fetchall()
-
-        if len(result) > 0:
-            return True
-        else:
-            return False
+        try:
+            sql = 'select id from %s where %s = "%s"' % (table, column, MySQLdb.escape_string(value.encode('utf-8')))
+            self.cursor.execute(sql)
+            result = self.cursor.fetchall()
+            if len(result) > 0:
+                return True
+            else:
+                return False
+        except Exception as e:
+            print e
 
     # Insert data into the database
     def sql_insert(self, table, data_array):
 
-        values = []
-        for i in data_array:
-            if (type(i) != str and type(i) != unicode):
-                values.append(str(i))
-            else:
-                values.append(i)
-        values = '","'.join(values)
-        sql = u'insert into %s values(NULL, "%s")' % (table, values)
-        # print sql
-        self.cursor.execute(sql)
-        self.connector.commit()
+        try:
+            values = []
+            for i in data_array:
+                if (type(i) != str and type(i) != unicode):
+                    values.append(MySQLdb.escape_string(str(i)))
+                else:
+                    values.append(MySQLdb.escape_string(i.encode('utf-8')))
+            values = '","'.join(values)
+            sql = 'insert into %s values(NULL, "%s")' % (table, values)
+            self.cursor.execute(sql)
+            self.connector.commit()
+        except Exception as e:
+            print e
 
     # Get record_id
     def get_record_id(self, table, column, value):
 
-        sql = u'select id from %s where %s = "%s"' % (table, column, value)
-        self.cursor.execute(sql)
-        result = self.cursor.fetchall()
+        try:
+            sql = 'select id from %s where %s = "%s"' % (table, column, MySQLdb.escape_string(value.encode('utf-8')))
+            self.cursor.execute(sql)
+            result = self.cursor.fetchall()
 
-        for row in result[0]:
-            return row
+            for row in result[0]:
+                return row
+        except Exception as e:
+            print e
 
     # Close database object
     def close(self):
