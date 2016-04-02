@@ -73,34 +73,34 @@ class Narou():
     def insert_database(self, dataset, tokens, term):
 
         # Title
-        table, column, value = 'cms_title', 'name', dataset['title']
+        table, column, value = 'analysis_title', 'name', dataset['title']
         if not self.DB.sql_confirm(table, column, value):
             data_array = [value]
             self.DB.sql_insert(table, data_array)
         title_id = self.DB.get_record_id(table, column, value)
 
         # Term
-        table, column, value = 'cms_term', 'type', term
+        table, column, value = 'analysis_term', 'type', term
         if not self.DB.sql_confirm(table, column, value):
             data_array = [value]
             self.DB.sql_insert(table, data_array)
         term_id = self.DB.get_record_id(table, column, value)
 
         # Score
-        table = 'cms_score'
+        table = 'analysis_score'
         data_array = [dataset['rank'], dataset['point'][:-2].replace(',',''), self.date, term_id, title_id]
         self.DB.sql_insert(table, data_array)
 
         for row in tokens:
             # Part of Speech
-            table, column, value = 'cms_pos', 'type', row.part_of_speech.split(',')[0]
+            table, column, value = 'analysis_pos', 'type', row.part_of_speech.split(',')[0]
             if not self.DB.sql_confirm(table, column, value):
                 data_array = [value]
                 self.DB.sql_insert(table, data_array)
             pos_id = self.DB.get_record_id(table, column, value)
 
             # Letter
-            table = 'cms_letter'
+            table = 'analysis_letter'
             data_array = [row.surface, self.date, pos_id, term_id]
             self.DB.sql_insert(table, data_array)
 
