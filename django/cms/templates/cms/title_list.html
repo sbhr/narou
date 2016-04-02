@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}タイトルの一覧{% endblock title %}
+
+{% block extrahead %}
+<style>
+	table{
+		margin-top:	8px;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<h3 class="page-header">タイトルの一覧</h3>
+<a href="{% url 'cms:title_add' %}" class="btn btn-default btn-sm">追加</a>
+<table class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>タイトル</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for title in titles %}
+		<tr>
+			<td>{{ title.id }}</td>
+			<td>{{ title.name }}</td>
+			<td>
+				<a href="{% url 'cms:title_mod' title_id=title.id %}" class="btn btn-default btn-sm">修正</a>
+				<a href="{% url 'cms:title_del' title_id=title.id %}" class="btn btn-default btn-sm">削除</a>
+				<a href="{% url 'cms:score_list' title_id=title.id %}" class="btn btn-default btn-sm btn-primary">得点の一覧</a>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock content %}

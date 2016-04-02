@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}得点の編集{% endblock title %}
+
+{% block content %}
+<h3 class="page-header">得点の編集</h3>
+{% if score_id %}
+<form action="{% url 'cms:score_mod' title_id=title_id score_id=score_id %}" method="post" class="form-horizontal" role="form">
+{% else %}
+<form action="{% url 'cms:score_add' title_id=title_id %}" method="post" class="form-horizontal" role="form">
+{% endif %}
+	{% csrf_token %}
+	{{ form|bootstrap_horizontal }}
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button type="submit" class="btn btn-primary">送信</button>
+		</div>
+	</div>
+</form>
+<a href="{% url 'cms:score_list' title_id=title_id %}" class="btn btn-default btn-sm">戻る</a>
+{% endblock content %}
