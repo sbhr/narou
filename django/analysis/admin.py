@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from cms.models import Title, Term, Pos, Letter, Score
+from analysis.models import Title, Term, Pos, Letter, Score
 
 # Register your models here.
 class TitleAdmin(admin.ModelAdmin):
