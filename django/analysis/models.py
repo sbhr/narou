@@ -20,9 +20,13 @@ class Pos(models.Model):
 class Term(models.Model):
     # 期間の種類
     type = models.CharField('期間', max_length = 127, unique = True)
+    name = models.CharField('期間名', max_length = 127, null=True)
 
     def __str__(self):
         return self.type
+
+    def __unicode__(self):
+        return self.name
 
 
 class Letter(models.Model):
