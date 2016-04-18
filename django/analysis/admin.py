@@ -17,8 +17,8 @@ admin.site.register(Pos, PosAdmin)
 
 
 class TermAdmin(admin.ModelAdmin):
-    list_display = ('id', 'type',)
-    list_display_links = ('type',)
+    list_display = ('id', 'type', 'name',)
+    list_display_links = ('type', 'name',)
 admin.site.register(Term, TermAdmin)
 
 

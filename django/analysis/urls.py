@@ -5,5 +5,6 @@ from analysis import views
 
 urlpatterns = [
     # Top page
-    url(r'$', views.index, name='index'),
+    url(r'^$', views.index, name='index'),
+    url(r'^/ranking/$', views.ranking, name='ranking'),
 ]
