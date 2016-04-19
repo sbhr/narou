@@ -14,7 +14,7 @@
 	<div class="row">
 		{% for term in terms %}
 		<div class="col-md-6 alt-table-responsive">
-			<h2>{{ term.name }}</h2>
+			<h2><a href="{% url 'analysis:ranking_list' term_id=term.id %}">{{ term.name }}</h2></a>
 			<table class="table table-bordered table-striped table-hover">
 				<thead>
 					<tr>
