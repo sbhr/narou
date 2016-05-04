@@ -9,7 +9,7 @@ from datetime import datetime
 
 # Create your views here.
 def index(request):
-    """Top Page"""
+    """Top page"""
 
     #本日のランキング
     raw_latest_date = Score.objects.order_by('id').reverse()[:1].values('date')[0]['date']
@@ -21,6 +21,13 @@ def index(request):
     return render(request,
                   'analysis/index.html',
                   {'words': words})
+
+# About page
+def about(request):
+    """About page"""
+
+    return render(request,
+                  'analysis/about.html')
 
 # Ranking page
 def ranking(request):
