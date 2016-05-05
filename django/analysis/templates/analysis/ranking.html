@@ -4,6 +4,11 @@
 
 {% block extrahead %}
 {# CSSとか #}
+<style>
+	.vcenter{
+		vertical-align:	middle;
+	}
+</style>
 {% endblock %}
 
 {% block content %}
@@ -11,29 +16,51 @@
 	<div class="page-header" style="margin-top:80px;">
 		<h1>人気名詞ランキング</h1>
 	</div>
+
 	<div class="row">
-		{% for term in terms %}
-		<div class="col-md-6 alt-table-responsive">
-			<h2><a href="{% url 'analysis:ranking_list' term_id=term.id %}">{{ term.name }}</h2></a>
-			<table class="table table-bordered table-striped table-hover">
-				<thead>
-					<tr>
-						<th class="text-center col-xs-2 col-ms-2 col-md-2 col-lg-2">順位</th>
-						<th class="text-center col-xs-8 col-ms-8 col-md-8 col-lg-8">単語</th>
-						<th class="text-center col-xs-2 col-ms-2 col-md-2 col-lg-2">出現回数</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for word in term.words %}
-					<tr>
-						<td class="text-right">{{ forloop.counter }}</td>
-						<td class="text-center">{{ word.value }}</td>
-						<td class="text-right">{{ word.num_words }}</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
+		<div class="col-md-12">
+			<div class="dropdown theme-dropdown">
+					<button id="dropdown-genre"class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+						{{ selected_term }}
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu" aria-labelleadby="dropdown-genre">
+						{% for genre in genre_list %}
+							<li class="presentation"><a role="menuitem" href="{% url 'analysis:ranking' term_name=genre %}">{{ genre }}</a></li>
+						{% endfor %}
+					</ul>
+			</div>
 		</div>
+
+
+		{% for term in target_terms %}
+			<div class="col-md-6 alt-table-responsive">
+				<h2>
+					<a href="{% url 'analysis:ranking_list' term_id=term.id %}">{{ term.name }}</a>
+					<h4>
+						<span class="label label-default vcenter">対象期間内データ数</span>
+						<span class="vcenter">{{ term.num_datas }}</span>
+					</h4>
+				</h2>
+				<table class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th class="text-center col-xs-2 col-ms-2 col-md-2 col-lg-2">順位</th>
+							<th class="text-center col-xs-8 col-ms-8 col-md-8 col-lg-8">単語</th>
+							<th class="text-center col-xs-2 col-ms-2 col-md-2 col-lg-2">出現回数</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for word in term.words %}
+						<tr>
+							<td class="text-right">{{ forloop.counter }}</td>
+							<td class="text-center">{{ word.value }}</td>
+							<td class="text-right">{{ word.num_words }}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
 		{% endfor %}
 	</div>
 </div>
