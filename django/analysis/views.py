@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.db.models import Count
 from django.views.generic.list import ListView
 from analysis.models import Score, Letter, Term
+from analysis.forms import TermForm
 from datetime import datetime
 
 # Create your views here.
@@ -35,17 +36,32 @@ def ranking(request, term_name=u"総合"):
 
     genre_list = [u"総合", u"文学", u"恋愛", u"歴史", u"推理", u"ファンタジー", u"SF", u"ホラー", u"コメディー", u"冒険", u"学園", u"戦記", u"童話", u"詩", u"エッセイ", u"その他"]
     selected_term = term_name
-    # for (i, row) in enumerate(genre_list):
     raw_latest_date = Score.objects.order_by('id').reverse()[:1].values('date')[0]['date']
     target_terms = Term.objects.filter(name__contains=term_name).values('id', 'name')
-    # terms = Term.objects.all().order_by('id')[:6].values('id', 'name')
+
+    # Form
+    if request.method == 'POST':
+        form = TermForm(request.POST)
+        if form.is_valid():
+            date_from = form.cleaned_data['From']
+            date_to   = form.cleaned_data['To']
+        else:
+            date_from = raw_latest_date
+            date_to   = raw_latest_date
+    else:
+        form = TermForm()
+        date_from = raw_latest_date
+        date_to   = raw_latest_date
+
+    # Get output data from database
     for term in target_terms:
-        term['words'] = Letter.objects.filter(pos_id=2, term_id=int(term['id']), date=raw_latest_date).values('value').annotate(num_words=Count('value')).order_by('-num_words')[:10]
-        term['num_datas'] = Score.objects.filter(term_id=int(term['id']), date=raw_latest_date).count()
+        term['words'] = Letter.objects.filter(pos_id=2, term_id=int(term['id']), date__lte=date_to, date__gte=date_from).values('value').annotate(num_words=Count('value')).order_by('-num_words')[:10]
+        term['num_datas'] = Score.objects.filter(term_id=int(term['id']), date__lte=date_to, date__gte=date_from).count()
 
     return render(request,
                   'analysis/ranking.html',
-                  {'target_terms':target_terms,
+                  {'form':form,
+                   'target_terms':target_terms,
                    'genre_list':genre_list,
                    'selected_term':selected_term})
 

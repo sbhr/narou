@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load bootstrap %}
 
 {% block title %}Ranking Page{% endblock title %}
 
@@ -9,6 +10,11 @@
 		vertical-align:	middle;
 	}
 </style>
+<script type="text/javascript">
+	$('#id_From').datepicker({
+		language:	'ja'
+	});
+</script>
 {% endblock %}
 
 {% block content %}
@@ -19,8 +25,9 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<div class="dropdown theme-dropdown">
-					<button id="dropdown-genre"class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+			<div class="col-md-2">
+				<div class="dropdown theme-dropdown">
+					<button id="dropdown-genre" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
 						{{ selected_term }}
 						<span class="caret"></span>
 					</button>
@@ -29,6 +36,15 @@
 							<li class="presentation"><a role="menuitem" href="{% url 'analysis:ranking' term_name=genre %}">{{ genre }}</a></li>
 						{% endfor %}
 					</ul>
+				</div>
+			</div>
+			<div class="col-md-10">
+				<form class="form-inline" action="{% url 'analysis:ranking' term_name=selected_term %}" method="post" role="form">
+				{% csrf_token %}
+					{{ form.From|bootstrap_horizontal }}
+					{{ form.To|bootstrap_horizontal }}
+					<input type="submit" class="btn btn-default" value="Submit">
+				</form>
 			</div>
 		</div>
 
