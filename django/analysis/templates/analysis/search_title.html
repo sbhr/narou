@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}Search Page{% endblock title %}
+
+{% block extrahead %}
+{# CSSとか #}
+<style>
+	.vcenter{
+		vertical-align:	middle;
+	}
+</style>
+<script type="text/javascript">
+	$(function(){
+		$(".dropdown-menu li a").click(function(){
+			$(this).parents('.dropdown').find('.dropdown-toggle').html($(this).text() + ' <span class="caret"></span>');
+			$(this).parents('.dropdown').find('input[name="dropdown-value"]').val($(this).attr("data-value"));
+		});
+	});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container theme-showcase" role="main">
+
+	<div class="row">
+		<div class="col-md-12">
+				{{ form.word|bootstrap_horizontal }}
+				<form class="form-inline" action="{% url 'analysis:search' %}" method="post" role="form">
+				{% csrf_token %}
+					<div class="dropdown theme-dropdown">
+						<button id="dropdown-term" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+							ジャンルと期間
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" role="menu" aria-labelleadby="dropdown-term">
+							{% for genre in genre_list %}
+							<li class="presentation"><a role="menuitem" href="#" data-value="{{ val }}">{{ term }}</a></li>
+							{% endfor %}
+						</ul>
+						<input type="hidden" name="dropdown-value" value="">
+					</div>
+					<input type="submit" class="btn btn-default" value="Submit">
+				</form>
+		</div>
+
+
+		{% for term in target_terms %}
+			<div class="col-md-6 alt-table-responsive">
+				<h2>
+					<a href="{% url 'analysis:ranking_list' term_id=term.id %}">{{ term.name }}</a>
+					<h4>
+						<span class="label label-default vcenter">対象期間内データ数</span>
+						<span class="vcenter">{{ term.num_datas }}</span>
+					</h4>
+				</h2>
+				<table class="table table-bordered table-striped table-hover">
+					<thead>
+						<tr>
+							<th class="text-center col-xs-2 col-ms-2 col-md-2 col-lg-2">順位</th>
+							<th class="text-center col-xs-8 col-ms-8 col-md-8 col-lg-8">単語</th>
+							<th class="text-center col-xs-2 col-ms-2 col-md-2 col-lg-2">出現回数</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for word in term.words %}
+						<tr>
+							<td class="text-right">{{ forloop.counter }}</td>
+							<td class="text-center">{{ word.value }}</td>
+							<td class="text-right">{{ word.num_words }}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock content %}

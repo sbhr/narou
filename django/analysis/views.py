@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.db.models import Count
 from django.views.generic.list import ListView
 from analysis.models import Score, Letter, Term
-from analysis.forms import TermForm
+from analysis.forms import TermForm, SearchForm
 from datetime import datetime
 
 # Create your views here.
@@ -68,6 +68,7 @@ def ranking(request, term_name=u"総合"):
 # Ranking List
 class RankingList(ListView):
     """Ranking List"""
+
     context_object_name='words'
     template_name='analysis/ranking_list.html'
     paginate_by = 50
@@ -83,3 +84,37 @@ class RankingList(ListView):
 
         context = self.get_context_data(object_list=self.object_list)
         return self.render_to_response(context)
+
+# Search Title
+def search_letter(request):
+    """Search letter"""
+
+    template_name='analysis/search_letter.html'
+    paginate_by = 10
+    target_terms = Term.objects.all()
+    form = SearchForm()
+
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            _word = form.cleaned_data['word']
+            _term = request.POST['term']
+
+            words = Letter.objects.filter(term_id=_term, value__contains=_word).values('value').annotate(num_words=Count('value')).order_by('-num_words')
+
+    else:
+        form = SearchForm()
+        words = ''
+
+    return render(request,
+                  'analysis/search_letter.html',
+                  {'form':form,
+                   'target_terms':target_terms,
+                   'words':words})
+
+# Search Title
+def search_title(request):
+    """Search title"""
+
+    template_name='analysis/search_title.html'
+    paginate_by = 10

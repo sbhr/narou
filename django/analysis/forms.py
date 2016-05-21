@@ -8,3 +8,8 @@ class TermForm(forms.Form):
     From = forms.DateField(initial=datetime.today())
     To = forms.DateField(initial=datetime.today())
 
+
+class SearchForm(forms.Form):
+    """Search page"""
+    word = forms.CharField()
+    term = forms.IntegerField()
