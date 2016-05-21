@@ -4,8 +4,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Count
 from django.views.generic.list import ListView
-from analysis.models import Score, Letter, Term
-from analysis.forms import TermForm, SearchForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from analysis.models import Score, Letter, Term, Title
+from analysis.forms import TermForm, SearchLetterForm, SearchTitleForm
 from datetime import datetime
 
 # Create your views here.
@@ -92,10 +93,10 @@ def search_letter(request):
     template_name='analysis/search_letter.html'
     paginate_by = 10
     target_terms = Term.objects.all()
-    form = SearchForm()
+    form = SearchLetterForm()
 
     if request.method == 'POST':
-        form = SearchForm(request.POST)
+        form = SearchLetterForm(request.POST)
         if form.is_valid():
             _word = form.cleaned_data['word']
             _term = request.POST['term']
@@ -103,7 +104,7 @@ def search_letter(request):
             words = Letter.objects.filter(term_id=_term, value__contains=_word).values('value').annotate(num_words=Count('value')).order_by('-num_words')
 
     else:
-        form = SearchForm()
+        form = SearchLetterForm()
         words = ''
 
     return render(request,
@@ -117,4 +118,37 @@ def search_title(request):
     """Search title"""
 
     template_name='analysis/search_title.html'
-    paginate_by = 10
+    paginate_by = 50
+    form = SearchTitleForm
+    query = request.GET.get('query')
+
+    if request.method == 'POST' or query is not None:
+        if query is None:
+            form = SearchTitleForm(request.POST)
+        else:
+            form = SearchTitleForm({'word':query})
+        if form.is_valid() or query is not None:
+            _word = form.cleaned_data['word']
+
+            title_list = Title.objects.filter(name__contains=_word).all().values('name')
+
+            paginator = Paginator(title_list, paginate_by)
+            page = request.GET.get('page')
+            try:
+                titles = paginator.page(page)
+            except PageNotAnInteger:
+                titles = paginator.page(1)
+            except EmptyPage:
+                titles = paginator.page(paginator.num_pages)
+
+    else:
+        form = SearchTitleForm()
+        titles = ''
+        _word = ''
+
+    return render(request,
+                  'analysis/search_title.html',
+                  {'form':form,
+                   'titles':titles,
+                   'query':_word})
+

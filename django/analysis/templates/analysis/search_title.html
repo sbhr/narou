@@ -11,69 +11,86 @@
 	}
 </style>
 <script type="text/javascript">
-	$(function(){
+/*	$(function(){
 		$(".dropdown-menu li a").click(function(){
 			$(this).parents('.dropdown').find('.dropdown-toggle').html($(this).text() + ' <span class="caret"></span>');
 			$(this).parents('.dropdown').find('input[name="dropdown-value"]').val($(this).attr("data-value"));
+			alert($(this).text());
 		});
 	});
+	$(window).on('load', function() {
+		$('.selectpicker').selectpicker({
+			'selectedText':	'cat'
+		});
+	});
+   	$(document).ready(function(){
+	$('.selectpicker').selectpicker();
+
+	});
+ 	$('select').select2();*/
 </script>
+<style>
+	.vcenter{
+		vertical-align:	center;
+	}
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="container theme-showcase" role="main">
 
+	<div class="page-header" style="margin-top:80px;">
+		<h2>検索</h2>
+	</div>
 	<div class="row">
 		<div class="col-md-12">
-				{{ form.word|bootstrap_horizontal }}
-				<form class="form-inline" action="{% url 'analysis:search' %}" method="post" role="form">
+			<form class="form-inline" action="{% url 'analysis:search_title' %}" method="post" role="form">
 				{% csrf_token %}
-					<div class="dropdown theme-dropdown">
-						<button id="dropdown-term" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-							ジャンルと期間
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu" aria-labelleadby="dropdown-term">
-							{% for genre in genre_list %}
-							<li class="presentation"><a role="menuitem" href="#" data-value="{{ val }}">{{ term }}</a></li>
-							{% endfor %}
-						</ul>
-						<input type="hidden" name="dropdown-value" value="">
-					</div>
-					<input type="submit" class="btn btn-default" value="Submit">
-				</form>
+				<div class="col-md-4">
+					{{ form.word|bootstrap_horizontal }}
+				</div>
+				<div class="col-md-4">
+					<input type="submit" class="btn btn-default" value="検索">
+				</div>
+			</form>
 		</div>
 
 
-		{% for term in target_terms %}
-			<div class="col-md-6 alt-table-responsive">
-				<h2>
-					<a href="{% url 'analysis:ranking_list' term_id=term.id %}">{{ term.name }}</a>
-					<h4>
-						<span class="label label-default vcenter">対象期間内データ数</span>
-						<span class="vcenter">{{ term.num_datas }}</span>
-					</h4>
-				</h2>
+		{% if titles %}
+			<hr>
+			<div class="col-md-offset-2 col-md-8 alt-table-responsive">
 				<table class="table table-bordered table-striped table-hover">
 					<thead>
 						<tr>
-							<th class="text-center col-xs-2 col-ms-2 col-md-2 col-lg-2">順位</th>
-							<th class="text-center col-xs-8 col-ms-8 col-md-8 col-lg-8">単語</th>
-							<th class="text-center col-xs-2 col-ms-2 col-md-2 col-lg-2">出現回数</th>
+							<th class="text-center col-xs-12 col-ms-12 col-md-12 col-lg-12">タイトル</th>
 						</tr>
 					</thead>
 					<tbody>
-						{% for word in term.words %}
+						{% for title in titles %}
 						<tr>
-							<td class="text-right">{{ forloop.counter }}</td>
-							<td class="text-center">{{ word.value }}</td>
-							<td class="text-right">{{ word.num_words }}</td>
+							<td class="text-left">{{ title.name }}</td>
 						</tr>
 						{% endfor %}
 					</tbody>
 				</table>
+
+				<div class="pagination">
+					<span class="step-links">
+						{% if titles.has_previous %}
+						<a href="?page={{ titles.previous_page_number }}&query={{ query }}">previous</a>
+						{% endif %}
+
+						<span class="current">
+							Page {{ titles.number }} of {{ titles.paginator.num_pages }}.
+						</span>
+
+						{% if titles.has_next %}
+						<a href="?page={{ titles.next_page_number }}&query={{ query }}">next</a>
+						{% endif %}
+					</span>
+				</div>
 			</div>
-		{% endfor %}
+		{% endif %}
 	</div>
 </div>
 {% endblock content %}

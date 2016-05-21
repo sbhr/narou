@@ -9,7 +9,12 @@ class TermForm(forms.Form):
     To = forms.DateField(initial=datetime.today())
 
 
-class SearchForm(forms.Form):
-    """Search page"""
+class SearchLetterForm(forms.Form):
+    """Search Letter"""
     word = forms.CharField()
     term = forms.IntegerField()
+
+
+class SearchTitleForm(forms.Form):
+    """Search Title"""
+    word = forms.CharField()
