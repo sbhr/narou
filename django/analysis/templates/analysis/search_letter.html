@@ -65,7 +65,7 @@
 		</div>
 
 
-		{% if words %}
+		{% if letters %}
 		<hr>
 			<div class="col-md-offset-2 col-md-8 alt-table-responsive">
 				<table class="table table-bordered table-striped table-hover">
@@ -76,10 +76,10 @@
 						</tr>
 					</thead>
 					<tbody>
-						{% for word in words %}
+						{% for letter in letters %}
 						<tr>
-							<td class="text-center">{{ word.value }}</td>
-							<td class="text-right">{{ word.num_words }}</td>
+							<td class="text-center">{{ letter.value }}</td>
+							<td class="text-right">{{ letter.num_letters }}</td>
 						</tr>
 						{% endfor %}
 					</tbody>
