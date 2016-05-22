@@ -4,35 +4,48 @@
 
 {% block extrahead %}
 {# CSSとか #}
+<style>
+	.table > tbody > tr > td.vcenter {
+		vertical-align: middle;
+	}
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="container theme-showcase" role="main">
-	<div class="jumbotron">
-		<h1>小説家になろうを分析</h1>
-		<p>投稿作品のタイトルを形態素解析で分析します。</p>
+<div class="jumbotron">
+	<div class="container">
+		<h1>なろう作品を分析しよう</h1>
+		<p>「小説家になろう」に投稿された作品のタイトルを形態素解析で分析します。</p>
 	</div>
+</div>
+<div class="container theme-showcase" role="main">
 	<div class="page-header">
 		<h1>本日の人気名詞ランキング</h1>
 	</div>
 	<div class="row">
-		<div class="col-md-6">
-			<table class="table">
+		<div class="col-md-12">
+			<table class="table table-bordered table-striped table-hover">
 				<thead>
 					<tr>
-						<th>順位</th>
-						<th>単語</th>
-						<th>出現回数</th>
-						<th>関連作品</th>
+						<th class="text-center" >順位</th>
+						<th class="text-center" >単語</th>
+						<th class="text-center" >出現回数</th>
+						<th class="text-center" >関連作品</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for word in words %}
 					<tr>
-						<td>{{ forloop.counter }}</td>
-						<td>{{ word.value }}</td>
-						<td>{{ word.num_words }}</td>
-						<td>{{ word.related_novels.0.title.name }}</td>
+						<td class="vcenter text-right">{{ forloop.counter }}</td>
+						<td class="vcenter text-center">{{ word.value }}</td>
+						<td class="vcenter text-right">{{ word.num_words }}</td>
+						<td class="vcenter">
+							<ul>
+								{% for novel in word.related_novels %}
+								<li>{{ novel.title.name }}</li>
+								{% endfor %}
+							</ul>
+						</td>
 					</tr>
 					{% endfor %}
 				</tbody>
