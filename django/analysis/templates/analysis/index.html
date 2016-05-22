@@ -19,9 +19,30 @@
 	</div>
 </div>
 <div class="container theme-showcase" role="main">
-	<div class="page-header">
-		<h1>本日の人気名詞ランキング</h1>
+	<h1>現在のデータ数</h1>
+	<div class="row">
+		<div class="col-md-3">
+			<ul class="list-group">
+				<li class="list-group-item">
+					<span class="badge">{{ overview.0.daily_num_of_letter }}</span>
+					今日の単語数
+				</li>
+				<li class="list-group-item">
+					<span class="badge">{{ overview.0.daily_num_of_title }}</span>
+					今日のタイトル数
+				</li>
+				<li class="list-group-item">
+					<span class="badge">{{ overview.0.total_num_of_letter }}</span>
+					累計単語数
+				</li>
+				<li class="list-group-item">
+					<span class="badge">{{ overview.0.total_num_of_title }}</span>
+					累計タイトル数
+				</li>
+			</ul>
+		</div>
 	</div>
+	<h1>本日の人気名詞ランキング</h1>
 	<div class="row">
 		<div class="col-md-12">
 			<table class="table table-bordered table-striped table-hover">
