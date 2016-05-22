@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Ranking Detail{% endblock title %}
+
+{% block extrahead %}
+{# CSSとか #}
+<style>
+	.table > tbody > tr > td.vcenter{
+		vertical-align: middle;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container theme-showcase" role="main">
+	<div class="page-header" style="margin-top:80px;">
+		<h1>人気名詞ランキング</h1>
+	</div>
+	<div class="row">
+		<div class="col-md-12 alt-table-responsive">
+			<h2>{{ name_of_term }}</h2>
+			<table class="table table-bordered table-striped table-hover">
+				<thead>
+					<tr>
+						<th class="text-center col-xs-1 col-ms-1 col-md-1 col-lg-1">順位</th>
+						<th class="text-center col-xs-2 col-ms-2 col-md-2 col-lg-2">単語</th>
+						<th class="text-center col-xs-1 col-ms-1 col-md-1 col-lg-1">出現回数</th>
+						<th class="text-center col-xs-8 col-ms-8 col-md-8 col-lg-8">関連作品</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for word in words %}
+					<tr>
+						<td class="vcenter text-right">{{ word.id }}</td>
+						<td class="vcenter text-center">{{ word.value }}</td>
+						<td class="vcenter text-right">{{ word.num_words }}</td>
+						<td class="vcenter">
+							<ul>
+								{% for novel in word.related_novels %}
+								<li> {{ novel.title.name }}</li>
+								{% endfor %}
+							</ul>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+
+			{% if is_paginated %}
+			<ul class="pagination">
+				{% if page_obj.has_previous %}
+					<li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+				{% else %}
+					<li class="disabled"><a href="#">&laquo;</a></li>
+				{% endif %}
+				{% for linkpage in page_obj.paginator.page_range %}
+					{% ifequal linkpage page_obj.number %}
+						<li class="active"><a href="#">{{ linkpage }}</a></li>
+					{% else %}
+						<li><a href="?page={{ linkpage }}">{{ linkpage }}</a></li>
+					{% endifequal %}
+				{% endfor %}
+				{% if page_obj.has_next %}
+					<li><a href="?page{{ page_obj.next_page_number }}">&raquo;</a></li>
+				{% else %}
+					<li class="disabled"><a href="#">&raquo;</a></li>
+				{% endif %}
+			</ul>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock content %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}About page{% endblock title %}
+
+{% block extrahead %}
+{# CSSとか #}
+{% endblock %}
+
+{% block content %}
+<div class="container" role="main">
+	<div class="page-header" style="margin-top:+80px">
+		<h1>概要</h1>
+		<p class="lead">このサイトは日本最大級の投稿型小説サイト「小説家になろう」に投稿されている小説を対象に、</br>
+		継続的にデータを収集して分析することを目的としています。</p>
+	</div>
+	<div class="row">
+		<h3>収集するデータについて</h3>
+		<p>分析対象のデータは、投稿されている小説の「タイトル」です。
+		小説家になろうグループの「小説を読もう！」をスクレイピングし、タイトルを収集しています。</p>
+	<p>「小説を読もう！」内のランキングページを収集対象としており、
+		日間、週間、月間、四半期、年間、累計の総合ランキングと、各ジャンル（合計15ジャンル）ごとに日間～年間の合計81ランキングから
+		1日に1回収集しています。</p>
+	</div>
+</div>
+{% endblock content %}
