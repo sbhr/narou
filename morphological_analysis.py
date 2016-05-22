@@ -20,7 +20,7 @@ class Narou():
 
     def __init__(self, json_file):
         # Log Setting
-        self.LOG_DIR = './'
+        self.LOG_DIR = './log/'
         logging.basicConfig(level = logging.DEBUG)
         self.logger = logging.getLogger(__name__)
         self.formatter = Formatter(fmt = '%(asctime)s  %(message)s', datefmt = '%Y/%m/%d %p %I:%M:%S',)
