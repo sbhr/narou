@@ -23,13 +23,17 @@ def index(request):
         temp_word = word['value']
         word['related_novels'] = Score.objects.filter(term_id=3, date=raw_latest_date, title__name__contains=temp_word).select_related().all().order_by('rank')[:3]
 
-    # Overview of Data
+    # Lateset Overview of Data
     overview = Overview.objects.all().order_by('-id')[:1]
+
+    # Overview graph
+    dataset = Overview.objects.all()
 
     return render(request,
                   'analysis/index.html',
                   {'words': words,
-                   'overview':overview})
+                   'overview':overview,
+                   'dataset':dataset})
 
 # About page
 def about(request):

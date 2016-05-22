@@ -9,6 +9,30 @@
 		vertical-align: middle;
 	}
 </style>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+	google.load('visualization', '1.0', {'packages':['corechart']});
+	google.setOnLoadCallback(function(){
+		var data = google.visualization.arrayToDataTable([
+			['dddd', 'num of data'],
+			{% for data in dataset %}
+				['{{ data.date }}', {{ data.daily_num_of_letter }}],
+			{% endfor %}
+		]);
+
+		var options = {
+			title:	'sample',
+			chartArea:	{'width':'70%', 'height':'65%', 'left':65},
+			hAxis:	{title:'date'},
+			vAxis:	{title:'num of data'},
+			crosshair:	{trigger:'both'}
+		};
+
+		var chart = new google.visualization.LineChart(document.getElementById('graphField'));
+		chart.draw(data, options);
+	});
+</script>
+
 {% endblock %}
 
 {% block content %}
@@ -19,7 +43,7 @@
 	</div>
 </div>
 <div class="container theme-showcase" role="main">
-	<h1>現在のデータ数</h1>
+	<h1>データの概要</h1>
 	<div class="row">
 		<div class="col-md-3">
 			<ul class="list-group">
@@ -40,6 +64,10 @@
 					累計タイトル数
 				</li>
 			</ul>
+		</div>
+		<div class="col-md-9">
+			<div id="graphField">Now Loading...</div>
+
 		</div>
 	</div>
 	<h1>本日の人気名詞ランキング</h1>
