@@ -47,3 +47,12 @@ class Score(models.Model):
     rank = models.IntegerField('順位')
     point = models.IntegerField('ポイント')
     date = models.DateTimeField('収集日時')
+
+
+class Overview(models.Model):
+    # データの概要
+    daily_num_of_letter = models.IntegerField('データ数（文字/日）')
+    daily_num_of_title = models.IntegerField('データ数（タイトル/日）')
+    total_num_of_letter = models.IntegerField('累計データ数（文字）')
+    total_num_of_title = models.IntegerField('累計データ数（タイトル）')
+    date = models.DateTimeField('収集日時')

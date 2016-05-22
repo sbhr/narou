@@ -68,6 +68,31 @@ class Database():
         except Exception as e:
             print e
 
+    # Get result by using original sql
+    def get_by_original_sql(self, sql):
+
+        try:
+            self.cursor.execute(sql)
+            result = self.cursor.fetchall()
+
+            for row in result:
+                return row
+        except Exception as e:
+            print e
+
+    # Get # of data
+    def get_num_of_data(self, table, column, where="1"):
+
+        try:
+            sql = 'SELECT COUNT(DISTINCT %s) FROM %s WHERE %s' % (column, table, where)
+            self.cursor.execute(sql)
+            result = self.cursor.fetchall()
+
+            for row in result[0]:
+                return row
+        except Exception as e:
+            print e
+
     # Close database object
     def close(self):
         self.cursor.close()
