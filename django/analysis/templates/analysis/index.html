@@ -22,8 +22,8 @@
 
 		var options = {
 			/* title:	'Overview', */
-			chartArea:	{'width':'80%', 'height':'75%'},
-			height:document.getElementById('overview-list').clientHeight,
+			chartArea:	{'width':'80%', 'height':'75%', top:7},
+			height:document.getElementById('overview-list').clientHeight * 1.1,
 			legend:	{position:'top'},
 			series:	{
 				0:	{targetAxisIndex:0},
@@ -38,6 +38,36 @@
 		};
 
 		var chart = new google.visualization.LineChart(document.getElementById('graphField'));
+		chart.draw(data, options);
+	});
+
+	google.setOnLoadCallback(function(){
+		var data = google.visualization.arrayToDataTable([
+			['date', '単語数', 'タイトル数'],
+			{% for data in dataset %}
+				['{{ data.date|date:"Y/m/d" }}', {{ data.total_num_of_letter }}, {{ data.total_num_of_title }}],
+			{% endfor %}
+		]);
+
+		var options = {
+			/* title:	'Overview', */
+			chartArea:	{'width':'80%', 'height':'75%', top:6},
+			height:document.getElementById('overview-list').clientHeight * 1.2,
+			legend:	{position:'top'},
+			vAxis:	{title:'累計データ数'},
+			//series:	{
+			//	0:	{targetAxisIndex:0},
+			//	1:	{targetAxisIndex:1},
+			//},
+			///* hAxis:	{title:'date'}, */
+			//vAxes:	{
+			//	0:	{title:'単語数'},
+			//	1:	{title:'タイトル数'}
+			//},
+			crosshair:	{trigger:'both'}
+		};
+
+		var chart = new google.visualization.AreaChart(document.getElementById('graphField2'));
 		chart.draw(data, options);
 	});
 </script>
@@ -64,7 +94,17 @@
 					<span class="badge">{{ overview.0.daily_num_of_title }}</span>
 					今日のタイトル数
 				</li>
-				<li class="list-group-item">
+						</ul>
+		</div>
+		<div class="col-md-9">
+			<div id="graphField">Now Loading...</div>
+
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+			<ul class="list-group" id="overview-list">
+								<li class="list-group-item">
 					<span class="badge">{{ overview.0.total_num_of_letter }}</span>
 					累計単語数
 				</li>
@@ -75,9 +115,10 @@
 			</ul>
 		</div>
 		<div class="col-md-9">
-			<div id="graphField">Now Loading...</div>
+			<div id="graphField2">Now Loading...</div>
 
 		</div>
+
 	</div>
 	<h1>本日の人気名詞ランキング</h1>
 	<div class="row">
