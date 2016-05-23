@@ -14,17 +14,26 @@
 	google.load('visualization', '1.0', {'packages':['corechart']});
 	google.setOnLoadCallback(function(){
 		var data = google.visualization.arrayToDataTable([
-			['dddd', 'num of data'],
+			['date', '単語数', 'タイトル数'],
 			{% for data in dataset %}
-				['{{ data.date }}', {{ data.daily_num_of_letter }}],
+				['{{ data.date|date:"Y/m/d" }}', {{ data.daily_num_of_letter }}, {{ data.daily_num_of_title }}],
 			{% endfor %}
 		]);
 
 		var options = {
-			title:	'sample',
-			chartArea:	{'width':'70%', 'height':'65%', 'left':65},
-			hAxis:	{title:'date'},
-			vAxis:	{title:'num of data'},
+			/* title:	'Overview', */
+			chartArea:	{'width':'80%', 'height':'75%'},
+			height:document.getElementById('overview-list').clientHeight,
+			legend:	{position:'top'},
+			series:	{
+				0:	{targetAxisIndex:0},
+				1:	{targetAxisIndex:1},
+			},
+			/* hAxis:	{title:'date'}, */
+			vAxes:	{
+				0:	{title:'単語数'},
+				1:	{title:'タイトル数'}
+			},
 			crosshair:	{trigger:'both'}
 		};
 
@@ -46,7 +55,7 @@
 	<h1>データの概要</h1>
 	<div class="row">
 		<div class="col-md-3">
-			<ul class="list-group">
+			<ul class="list-group" id="overview-list">
 				<li class="list-group-item">
 					<span class="badge">{{ overview.0.daily_num_of_letter }}</span>
 					今日の単語数
