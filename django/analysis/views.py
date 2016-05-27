@@ -110,7 +110,6 @@ def search_letter(request):
     """Search letter"""
 
     # var
-    template_name='analysis/search_letter.html'
     target_terms = Term.objects.all()
     form = SearchLetterForm()
 
@@ -139,7 +138,6 @@ def search_title(request):
     """Search title"""
 
     # var
-    template_name='analysis/search_title.html'
     paginate_by = 50
     form = SearchTitleForm
     query = request.GET.get('query')
@@ -178,3 +176,11 @@ def search_title(request):
                    'titles':titles,
                    'query':_word})
 
+# Detail Letter
+def detail_letter(request, value_letter):
+    """Detail letter"""
+
+    # var
+
+    return render(request,
+                  'analysis/detail_letter.html')
