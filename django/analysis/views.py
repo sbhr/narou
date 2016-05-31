@@ -123,15 +123,18 @@ def search_letter(request):
             _term = request.POST['term']
             # Get Letters contain var for search
             letters = Letter.objects.filter(term_id=_term, value__contains=_word).values('value').annotate(num_letters=Count('value')).order_by('-num_letters')
+            _term = int(_term)
     else:
         form = SearchLetterForm()
         letters = ''
+        _term = ''
 
     return render(request,
                   'analysis/search_letter.html',
                   {'form':form,
                    'target_terms':target_terms,
-                   'letters':letters})
+                   'letters':letters,
+                   'used_term':_term})
 
 # Search Title
 def search_title(request):
@@ -177,10 +180,19 @@ def search_title(request):
                    'query':_word})
 
 # Detail Letter
-def detail_letter(request, value_letter):
+def detail_letter(request, value_letter, term_id):
     """Detail letter"""
 
     # var
+    raw_latest_date = Score.objects.order_by('id').reverse()[:1].values('date')[0]['date']
+
+    dataset = Letter.objects.filter(value=value_letter, term_id=term_id).values('value', 'date').annotate(num_of_letters=Count('value')).values('date', 'num_of_letters')
+    # words = Letter.objects.filter(pos_id=2, term_id=3, date=raw_latest_date).values('value').annotate(num_words=Count('value')).order_by('-num_words')[:10]
+    related_novels = Score.objects.filter(term_id=term_id, date=raw_latest_date, title__name__contains=value_letter).select_related().all().order_by('rank').distinct()[:10]
 
     return render(request,
-                  'analysis/detail_letter.html')
+                  'analysis/detail_letter.html',
+                  {'value_letter':value_letter,
+                   'term_id':term_id,
+                   'dataset':dataset,
+                   'related_novels':related_novels})

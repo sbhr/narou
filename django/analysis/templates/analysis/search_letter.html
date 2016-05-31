@@ -34,7 +34,11 @@ $(function(){
 					<label class="control-label" for="id_term">Term</label>
 					<select class="select vcenter" id='id_term' name="term">
 						{% for term in target_terms %}
-							<option value="{{ term.id }}">{{ term.name }}</option>
+							{% ifequal term.id used_term %}
+								<option value="{{ term.id }}" selected>{{ term.name }}</option>
+							{% else %}
+								<option value="{{ term.id }}">{{ term.name }}</option>
+							{% endifequal %}
 						{% endfor %}
 					</select>
 
@@ -59,7 +63,7 @@ $(function(){
 					<tbody>
 						{% for letter in letters %}
 						<tr>
-							<td class="text-center"><a href="{% url 'analysis:detail_letter' value_letter=letter.value %}">{{ letter.value }}</a></td>
+							<td class="text-center"><a href="{% url 'analysis:detail_letter' value_letter=letter.value term_id=used_term %}">{{ letter.value }}</a></td>
 							<td class="text-right">{{ letter.num_letters }}</td>
 						</tr>
 						{% endfor %}
