@@ -49,7 +49,7 @@ $(function(){
 					<tbody>
 						{% for title in titles %}
 						<tr>
-							<td class="text-left">{{ title.name }}</td>
+							<td class="text-left"><a href="{% url 'analysis:detail_title' title_id=title.id %}">{{ title.name }}</a></td>
 						</tr>
 						{% endfor %}
 					</tbody>

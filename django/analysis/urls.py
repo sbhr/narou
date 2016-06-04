@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^search_letter/$', views.search_letter, name='search_letter'),
     url(r'^search_title/$', views.search_title, name='search_title'),
     url(r'^detail_letter/(?P<value_letter>.+)&(?P<term_id>\d+)$', views.detail_letter, name='detail_letter'),
+    url(r'^detail_title/(?P<title_id>\d+)$', views.detail_title, name='detail_title'),
 ]
