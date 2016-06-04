@@ -156,7 +156,9 @@ def search_title(request):
             # var for search
             _word = form.cleaned_data['word']
             # Get titles contain var for search
-            title_list = Title.objects.filter(name__contains=_word).values('name')
+            title_list = Title.objects.filter(name__contains=_word).values('name','id')
+            for row in title_list:
+                row['id'] = int(row['id'])
 
             # Paging
             paginator = Paginator(title_list, paginate_by)
@@ -180,14 +182,13 @@ def search_title(request):
                    'query':_word})
 
 # Detail Letter
-def detail_letter(request, value_letter, term_id):
+def detail_letter(request, title_id):
     """Detail letter"""
 
     # var
     raw_latest_date = Score.objects.order_by('id').reverse()[:1].values('date')[0]['date']
 
     dataset = Letter.objects.filter(value=value_letter, term_id=term_id).values('value', 'date').annotate(num_of_letters=Count('value')).values('date', 'num_of_letters')
-    # words = Letter.objects.filter(pos_id=2, term_id=3, date=raw_latest_date).values('value').annotate(num_words=Count('value')).order_by('-num_words')[:10]
     related_novels = Score.objects.filter(term_id=term_id, date=raw_latest_date, title__name__contains=value_letter).select_related().all().order_by('rank').distinct()[:10]
 
     return render(request,
@@ -196,3 +197,19 @@ def detail_letter(request, value_letter, term_id):
                    'term_id':term_id,
                    'dataset':dataset,
                    'related_novels':related_novels})
+
+# Detail Title
+def detail_title(request, title_id):
+    """Detail title"""
+
+    # var
+    raw_latest_date = Score.objects.order_by('id').reverse()[:1].values('date')[0]['date']
+
+    # dataset = Title.objects.filter(value=value_letter, term_id=term_id).values('value', 'date').annotate(num_of_letters=Count('value')).values('date', 'num_of_letters')
+    # related_novels = Score.objects.filter(term_id=term_id, date=raw_latest_date, title__name__contains=value_letter).select_related().all().order_by('rank').distinct()[:10]
+
+    return render(request,
+                  'analysis/detail_title.html')
+                  # {'value_letter':value_letter,
+                  #  'dataset':dataset,
+                  #  'related_novels':related_novels})

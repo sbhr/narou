@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+
+{% block title %}Search Page{% endblock title %}
+
+{% block extrahead %}
+{# CSSとか #}
+<style>
+	.vcenter{
+		vertical-align:	middle;
+	}
+</style>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+	google.load('visualization', '1.0', {'packages':['corechart']});
+	google.setOnLoadCallback(function(){
+		var data = google.visualization.arrayToDataTable([
+			['date', '出現回数'],
+			{% for data in dataset %}
+				['{{ data.date|date:"Y/m/d" }}', {{ data.num_of_letters }}],
+			{% endfor %}
+		]);
+
+		var options = {
+			/* title:	'【{{ value_letter }}】の出現回数', */
+			chartArea:	{'width':'90%', 'height':'70%', top:20},
+			height:	'200',
+			legend:	{position:'top'},
+			fontsize:20,
+			hAxis:	{showTextEvery:7},
+			/* vAxis:	{title:'出現回数'}, */
+			crosshair:	{trigger:'both'}
+		};
+
+		var chart = new google.visualization.AreaChart(document.getElementById('graphField'));
+		chart.draw(data, options);
+	});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container theme-showcase" role="main">
+
+	<div class="page-header" style="margin-top:80px;">
+		<h1>{{ value_letter }}</h1>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<h4>出現回数</h4>
+			<div id="graphField">Now loading...</div>
+		</div>
+
+		<div class="col-md-12">
+			<h4>タイトルに【{{ value_letter }}】を含む小説</h4>
+			<table class="table table-bordered table-striped table-hover">
+				<thead>
+				</thead>
+				<tbody>
+					{% for related_novel in related_novels %}
+						<tr>
+							<td class="col-xs-12 col-ms-12 col-md-12 col-lg-12">{{ related_novel.title.name }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{% endblock content %}
