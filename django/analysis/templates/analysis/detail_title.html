@@ -15,24 +15,36 @@
 	google.load('visualization', '1.0', {'packages':['corechart']});
 	google.setOnLoadCallback(function(){
 		var data = google.visualization.arrayToDataTable([
-			['date', '出現回数'],
-			{% for data in dataset %}
-				['{{ data.date|date:"Y/m/d" }}', {{ data.num_of_letters }}],
+			{% for dataset in graph_data %}
+				{% if forloop.first %}
+				[{% for data in dataset %}{% if forloop.last %}'{{ data }}'{% else %}'{{ data }}',{% endif %}{% endfor %}],
+				{% else %}
+				[{% for data in dataset %}{% if forloop.first %}'{{ data }}',{% elif forloop.last %}{{ data }}{% else %}{{ data }},{% endif %}{% endfor %}],
+				{% endif %}
 			{% endfor %}
 		]);
+				/* ['date', '点数'], */
+				/* ['{{ score.date|date:"Y/m/d" }}', {{ score.point }}], */
 
 		var options = {
-			/* title:	'【{{ value_letter }}】の出現回数', */
 			chartArea:	{'width':'90%', 'height':'70%', top:20},
-			height:	'200',
+			height:	'400',
 			legend:	{position:'top'},
 			fontsize:20,
-			hAxis:	{showTextEvery:7},
-			/* vAxis:	{title:'出現回数'}, */
+		/*	series: {
+				0:	{targetAxisIndex:0},
+				1:	{targetAxisIndex:1}
+			},
+ */			hAxis:	{showTextEvery:7},
+/* 			vAxes:	{
+				0:	{tite:'順位'},
+				1:	{title:'点数'}
+			},
+ */			/* vAxis:	{title:'出現回数'}, */
 			crosshair:	{trigger:'both'}
 		};
 
-		var chart = new google.visualization.AreaChart(document.getElementById('graphField'));
+		var chart = new google.visualization.LineChart(document.getElementById('graphField'));
 		chart.draw(data, options);
 	});
 </script>
@@ -46,7 +58,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<h4>出現回数</h4>
+			<h4>順位と点数</h4>
 			<div id="graphField">Now loading...</div>
 		</div>
 
