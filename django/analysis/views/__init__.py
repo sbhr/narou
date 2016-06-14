@@ -1,0 +1,8 @@
+import view_index
+import view_about
+import view_ranking
+import view_RankingList
+import view_search_letter
+import view_search_title
+import view_detail_letter
+import view_detail_title
