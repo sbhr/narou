@@ -15,16 +15,14 @@
 	google.load('visualization', '1.0', {'packages':['corechart']});
 	google.setOnLoadCallback(function(){
 		var data = google.visualization.arrayToDataTable([
-			{% for dataset in graph_data %}
+			{% for dataset in graph_data_rank %}
 				{% if forloop.first %}
 				[{% for data in dataset %}{% if forloop.last %}'{{ data }}'{% else %}'{{ data }}',{% endif %}{% endfor %}],
 				{% else %}
-				[{% for data in dataset %}{% if forloop.first %}'{{ data }}',{% elif forloop.last %}{{ data }}{% else %}{{ data }},{% endif %}{% endfor %}],
+				[{% for data in dataset %}{% if forloop.first %}'{{ data|date:"Y/m/d" }}',{% elif forloop.last %}{{ data }}{% else %}{{ data }},{% endif %}{% endfor %}],
 				{% endif %}
 			{% endfor %}
 		]);
-				/* ['date', '点数'], */
-				/* ['{{ score.date|date:"Y/m/d" }}', {{ score.point }}], */
 
 		var options = {
 			chartArea:	{'width':'90%', 'height':'70%', top:20},
@@ -36,17 +34,48 @@
 				1:	{targetAxisIndex:1}
 			},
  */			hAxis:	{showTextEvery:7},
-/* 			vAxes:	{
-				0:	{tite:'順位'},
-				1:	{title:'点数'}
+			vAxis:	{
+				direction:	-1,
+				viewWindow:	{min:0, max:300}
 			},
- */			/* vAxis:	{title:'出現回数'}, */
+			/* vAxis:	{title:'出現回数'}, */
 			crosshair:	{trigger:'both'}
 		};
 
 		var chart = new google.visualization.LineChart(document.getElementById('graphField'));
 		chart.draw(data, options);
 	});
+
+	google.setOnLoadCallback(function(){
+		var data = google.visualization.arrayToDataTable([
+			{% for dataset in graph_data_point %}
+				{% if forloop.first %}
+				[{% for data in dataset %}{% if forloop.last %}'{{ data }}'{% else %}'{{ data }}',{% endif %}{% endfor %}],
+				{% else %}
+				[{% for data in dataset %}{% if forloop.first %}'{{ data|date:"Y/m/d" }}',{% elif forloop.last %}{{ data }}{% else %}{{ data }},{% endif %}{% endfor %}],
+				{% endif %}
+			{% endfor %}
+		]);
+
+		var options = {
+			chartArea:	{'width':'90%', 'height':'70%', top:20},
+			height:	'400',
+			legend:	{position:'top'},
+			fontsize:20,
+ 			hAxis:	{showTextEvery:7},
+			vAxis:	{
+				direction:	1,
+				logScale:	true,
+				viewWindow:	{min:0}
+			},
+			/* vAxis:	{title:'出現回数'}, */
+			crosshair:	{trigger:'both'}
+		};
+
+		var chart = new google.visualization.LineChart(document.getElementById('graphField2'));
+		chart.draw(data, options);
+	});
+
 </script>
 {% endblock %}
 
@@ -58,23 +87,12 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<h4>順位と点数</h4>
+			<h3>順位</h3>
 			<div id="graphField">Now loading...</div>
 		</div>
-
 		<div class="col-md-12">
-			<h4>タイトルに【{{ value_letter }}】を含む小説</h4>
-			<table class="table table-bordered table-striped table-hover">
-				<thead>
-				</thead>
-				<tbody>
-					{% for related_novel in related_novels %}
-						<tr>
-							<td class="col-xs-12 col-ms-12 col-md-12 col-lg-12">{{ related_novel.title.name }}</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
+			<h3>点数</h3>
+			<div id="graphField2">Now loading...</div>
 		</div>
 	</div>
 </div>
