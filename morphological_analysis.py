@@ -82,7 +82,7 @@ class Narou():
         # Term
         table, column, value = 'analysis_term', 'type', term
         if not self.DB.sql_confirm(table, column, value):
-            data_array = [value]
+            data_array = [value, '']
             self.DB.sql_insert(table, data_array)
         term_id = self.DB.get_record_id(table, column, value)
 
