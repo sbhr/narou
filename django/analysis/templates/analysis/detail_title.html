@@ -87,6 +87,23 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
+			<h3>形態素解析</h3>
+			<table class="table table-bordered table-striped">
+				<thead>
+					{% for token in array_for_tokens %}
+					<th class="text-center">{{ token.pos }}</th>
+					{% endfor %}
+				</thead>
+				<tbody>
+					<tr>
+						{% for token in array_for_tokens %}
+						<td class="text-center"><a href="{% url 'analysis:detail_letter' value_letter=token.surface term_id=1 %}">{{ token.surface }}</a></td>
+						{% endfor %}
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-md-12">
 			<h3>順位</h3>
 			<div id="graphField">Now loading...</div>
 		</div>

@@ -3,6 +3,7 @@
 from django.shortcuts import render
 from django.db.models import Count
 from analysis.models import Score, Title
+from janome.tokenizer import Tokenizer
 
 # Create your views here.
 # Detail Title
@@ -14,6 +15,7 @@ def detail_title(request, title_id):
     dict_for_point = {}
     graph_data_rank = []
     graph_data_point = []
+    array_for_tokens = []
 
     # Get name of title_id
     name_of_title = Title.objects.filter(id=title_id).values('name')[0]['name']
@@ -58,8 +60,19 @@ def detail_title(request, title_id):
             graph_data_rank.append(tmp_rank)
             graph_data_point.append(tmp_point)
 
+    # Analysis title
+    t = Tokenizer()
+    tokens = t.tokenize(name_of_title)
+    for token in tokens:
+        temp = {
+            'surface':  token.surface,
+            'pos':  token.part_of_speech.split(',')[0]
+        }
+        array_for_tokens.append(temp)
+
     return render(request,
                   'analysis/detail_title.html',
                   {'name_of_title':name_of_title,
                    'graph_data_rank':graph_data_rank,
-                   'graph_data_point':graph_data_point})
+                   'graph_data_point':graph_data_point,
+                   'array_for_tokens':array_for_tokens})
