@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.db.models import Count
-from django.views.generic.list import ListView
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from analysis.models import Score, Letter, Term, Title, Overview
-from analysis.forms import TermForm, SearchLetterForm, SearchTitleForm
-from datetime import datetime
+from analysis.models import Score, Title
+from janome.tokenizer import Tokenizer
 
 # Create your views here.
 # Detail Title
@@ -15,7 +11,11 @@ def detail_title(request, title_id):
     """Detail title"""
 
     # var
-    raw_latest_date = Score.objects.order_by('id').reverse()[:1].values('date')[0]['date']
+    dict_for_rank = {}
+    dict_for_point = {}
+    graph_data_rank = []
+    graph_data_point = []
+    array_for_tokens = []
 
     # Get name of title_id
     name_of_title = Title.objects.filter(id=title_id).values('name')[0]['name']
@@ -26,35 +26,53 @@ def detail_title(request, title_id):
     # Get Score of title_id in all of the term
     scoreset = Score.objects.filter(title_id=title_id).select_related().values('title__name', 'term__name', 'rank', 'point', 'date')
 
-    temp = {}
-    graph_data = []
-
+    # Fill dict_for_rank with 0
     for i in xrange(0, len(all_listed_term)):
-        temp[all_listed_term[i]['term__name']] = {}
+        dict_for_rank[all_listed_term[i]['term__name']] = {}
+        dict_for_point[all_listed_term[i]['term__name']] = {}
         for j in xrange(0, len(all_listed_date)):
-            temp[all_listed_term[i]['term__name']][all_listed_date[j]['date']] = 0
+            dict_for_rank[all_listed_term[i]['term__name']][all_listed_date[j]['date']] = "NaN"
+            dict_for_point[all_listed_term[i]['term__name']][all_listed_date[j]['date']] = "NaN"
+
+    # Assign the data of rank
     for row in scoreset:
-        temp[row['term__name']][row['date']] = row['rank']
+        dict_for_rank[row['term__name']][row['date']] = row['rank']
+        dict_for_point[row['term__name']][row['date']] = row['point']
+
+    # Format tha dataset for Google chart
     for i in xrange(-1, len(all_listed_date)):
+        # at the first loop
         if i == -1:
             tmp = []
             tmp.append('date')
             for j in xrange(0, len(all_listed_term)):
                 tmp.append(all_listed_term[j]['term__name'])
-            graph_data.append(tmp)
+            graph_data_rank.append(tmp)
+            graph_data_point.append(tmp)
         else:
-            tmp = []
-            tmp.append(all_listed_date[i]['date'])
+            tmp_rank = []
+            tmp_point = []
+            tmp_rank.append(all_listed_date[i]['date'])
+            tmp_point.append(all_listed_date[i]['date'])
             for j in xrange(0, len(all_listed_term)):
-                tmp.append(temp[all_listed_term[j]['term__name']][all_listed_date[i]['date']])
-            graph_data.append(tmp)
+                tmp_rank.append(dict_for_rank[all_listed_term[j]['term__name']][all_listed_date[i]['date']])
+                tmp_point.append(dict_for_point[all_listed_term[j]['term__name']][all_listed_date[i]['date']])
+            graph_data_rank.append(tmp_rank)
+            graph_data_point.append(tmp_point)
 
-
-    # Get number of occurrences of title_id in term of term_id
-    # dataset = Title.objects.filter(value=value_letter, term_id=term_id).values('value', 'date').annotate(num_of_letters=Count('value')).values('date', 'num_of_letters')
-    # related_novels = Score.objects.filter(term_id=term_id, date=raw_latest_date, title__name__contains=value_letter).select_related().all().order_by('rank').distinct()[:10]
+    # Analysis title
+    t = Tokenizer()
+    tokens = t.tokenize(name_of_title)
+    for token in tokens:
+        temp = {
+            'surface':  token.surface,
+            'pos':  token.part_of_speech.split(',')[0]
+        }
+        array_for_tokens.append(temp)
 
     return render(request,
                   'analysis/detail_title.html',
                   {'name_of_title':name_of_title,
-                   'graph_data':graph_data})
+                   'graph_data_rank':graph_data_rank,
+                   'graph_data_point':graph_data_point,
+                   'array_for_tokens':array_for_tokens})
