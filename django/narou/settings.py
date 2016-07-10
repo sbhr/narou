@@ -81,9 +81,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'narou',
         'USER': 'shibahara',
-        'PASSWORD': 'ylab920',
-        'HOST': '127.0.0.1',
-        'PORT': '3306'
+        'PASSWORD': '8ik,.lo9',
+        'HOST': 'sbdb.cgzlcnft7ehv.ap-northeast-1.rds.amazonaws.com',
+        'PORT': '63306'
     }
 }
 

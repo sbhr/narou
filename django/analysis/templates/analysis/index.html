@@ -129,7 +129,7 @@
 					{% for word in words %}
 					<tr>
 						<td class="vcenter text-right">{{ forloop.counter }}</td>
-						<td class="vcenter text-center">{{ word.value }}</td>
+						<td class="vcenter text-center"><a href="{% url 'analysis:detail_letter' value_letter=word.value term_id=1 %}">{{ word.value }}</a></td>
 						<td class="vcenter text-right">{{ word.num_words }}</td>
 						<td class="vcenter">
 							<ul>
