@@ -58,7 +58,7 @@
 				<tbody>
 					{% for related_novel in related_novels %}
 						<tr>
-							<td class="col-xs-12 col-ms-12 col-md-12 col-lg-12">{{ related_novel.title.name }}</td>
+							<td class="col-xs-12 col-ms-12 col-md-12 col-lg-12"><a href="{% url 'analysis:detail_title' title_id=related_novel.title.id %}">{{ related_novel.title.name }}</a></td>
 						</tr>
 					{% endfor %}
 				</tbody>
