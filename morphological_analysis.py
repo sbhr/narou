@@ -101,7 +101,7 @@ class Narou():
 
             # Letter
             table = 'analysis_letter'
-            data_array = [row.surface, self.date, pos_id, term_id]
+            data_array = [row.surface, self.date, pos_id, term_id, title_id]
             self.DB.sql_insert(table, data_array)
 
 # main

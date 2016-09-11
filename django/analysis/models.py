@@ -33,6 +33,7 @@ class Letter(models.Model):
     # 文字
     pos = models.ForeignKey(Pos, related_name='letters_pos')
     term = models.ForeignKey(Term, related_name='letters_term')
+    title = models.ForeignKey(Title, related_name='letters_title')
     value = models.CharField('文字', max_length = 255)
     date = models.DateTimeField('収集日時')
 
