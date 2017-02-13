@@ -10,8 +10,28 @@ from analysis.forms import TermForm
 def ranking(request, term_name=u"総合"):
     """Ranking Page"""
 
-    #var
-    genre_list = [u"総合", u"文学", u"恋愛", u"歴史", u"推理", u"ファンタジー", u"SF", u"ホラー", u"コメディー", u"冒険", u"学園", u"戦記", u"童話", u"詩", u"エッセイ", u"その他"]
+    # var
+    genre_list = [
+        u"総合",
+        u"異世界〔恋愛〕",
+        u"現実世界〔恋愛〕",
+        u"ハイファンタジー〔ファンタジー〕",
+        u"ローファンタジー〔ファンタジー〕",
+        u"純文学〔文芸〕",
+        u"ヒューマンドラマ〔文芸〕",
+        u"歴史〔文芸〕",
+        u"推理〔文芸〕",
+        u"ホラー〔文芸〕",
+        u"アクション〔文芸〕",
+        u"コメディー〔文芸〕",
+        u"VRゲーム〔SF〕",
+        u"宇宙〔SF〕",
+        u"空想科学〔SF〕",
+        u"パニック〔SF〕",
+        u"童話〔その他〕",
+        u"詩〔その他〕",
+        u"エッセイ〔その他〕"
+    ]
     selected_term = term_name
     raw_latest_date = Score.objects.order_by('id').reverse()[:1].values('date')[0]['date']
     target_terms = Term.objects.filter(name__contains=term_name).values('id', 'name')
