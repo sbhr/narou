@@ -13,11 +13,11 @@ class Database():
 
     def __init__(self):
         # variable
-        self.HOST = 'sbdb.cgzlcnft7ehv.ap-northeast-1.rds.amazonaws.com'
+        self.HOST = ''
         self.DATABASE = 'narou'
-        self.USER = 'shibahara'
-        self.PASSWD = '8ik,.lo9'
-        self.PORT = 63306
+        self.USER = ''
+        self.PASSWD = ''
+        self.PORT = 3306
         self.CHARSET = 'utf8'
         #Connect DB
         self.connector = MySQLdb.connect(host = self.HOST, db = self.DATABASE, user = self.USER, passwd = self.PASSWD, port = self.PORT, charset = self.CHARSET)
