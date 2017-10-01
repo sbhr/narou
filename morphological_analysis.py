@@ -88,7 +88,10 @@ class Narou():
 
         # Score
         table = 'analysis_score'
-        data_array = [dataset['rank'], dataset['point'][:-2].replace(',',''), self.date, term_id, title_id]
+        if "pt" in dataset['point']:
+            data_array = [dataset['rank'], dataset['point'][:-2].replace(',',''), self.date, term_id, title_id]
+        else:
+            data_array = [dataset['rank'], dataset['point'].replace(',',''), self.date, term_id, title_id]
         self.DB.sql_insert(table, data_array)
 
         for row in tokens:
@@ -101,7 +104,7 @@ class Narou():
 
             # Letter
             table = 'analysis_letter'
-            data_array = [row.surface, self.date, pos_id, term_id]
+            data_array = [row.surface, self.date, pos_id, term_id, title_id]
             self.DB.sql_insert(table, data_array)
 
 # main
